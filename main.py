@@ -141,12 +141,25 @@ def _invoke_builtin_(command: logoParser.CommandContext):
 
         function, parameters = mapping
 
-        function_parameters = _map_function_parameters_(context, parameters)
+        function_parameters = _bind_function_parameters_(context, parameters)
 
         return InvokeFunction(function, function_parameters)
 
 
-def _map_function_parameters_(function, mapped_parameters: List[str]):
+def _bind_function_parameters_(function, mapped_parameters: List[str]):
+    """
+    Bind the parameters of a user declared function invocation to a given python function.
+    This allows to declare a function invocation using different parameters name than a python function.
+    The parameters will be bind considering the order informed by mapped_parameters argument.
+
+    Example:
+        math.pow(b, a) can be called `POW :BASE :EXP`
+
+    :param function: The function context
+    :param mapped_parameters: the parameters of the python function that will be invoked
+    :return: the mapped parameters
+    """
+
     function_parameters = {}
 
     function_declared_params = function.function_arg()
@@ -166,10 +179,6 @@ class LogoProgram(logoListener):
     def __init__(self):
         pass
 
-    def exitFunction_body(self, ctx:logoParser.Function_bodyContext):
-        print()
-        pass
-
     def exitFunction_declaration(self, ctx:logoParser.Function_declarationContext):
         function_arguments = ctx.function_args_declaration().function_arg()
         function_arguments = list(map(lambda x: x.IDENTIFIER().getText(), function_arguments))
@@ -179,7 +188,7 @@ class LogoProgram(logoListener):
         symbol = self.symbol_table.get(function_declared_name)
 
         if symbol is not None:
-            raise Exception(f"A symbol already exists {symbol}")
+            raise Exception(f"Trying to declare a function but a symbol with the same name already exists {symbol}")
 
         statements: List[logoParser.Function_body_statementContext] = ctx.function_body().function_body_statement()
 
@@ -198,7 +207,7 @@ class LogoProgram(logoListener):
                 if function_to_invoke is None:
                     raise Exception(f"not found function to invoke: {function.IDENTIFIER()}")
 
-                parameters = _map_function_parameters_(function, function_to_invoke.parameters)
+                parameters = _bind_function_parameters_(function, function_to_invoke.parameters)
                 body.append(InvokeFunction(function_to_invoke, parameters))
 
         self.symbol_table[function_declared_name] = Function(function_declared_name, function_arguments, body)
