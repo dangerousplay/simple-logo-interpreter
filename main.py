@@ -1,9 +1,5 @@
-# This is a sample Python script.
-import typing
 from typing import List
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from antlr4 import *
 
 from logoListener import logoListener
@@ -184,10 +180,6 @@ class LogoProgram(logoListener):
 
         if symbol is not None:
             raise Exception(f"A symbol already exists {symbol}")
-
-        # commands: List[logoParser.Command_declare_invokeContext] = ctx.function_body().command_declare_invoke()
-        # commands: List[logoParser.CommandContext] = list(map(lambda x: x.command(), commands))
-        #
 
         statements: List[logoParser.Function_body_statementContext] = ctx.function_body().function_body_statement()
 
