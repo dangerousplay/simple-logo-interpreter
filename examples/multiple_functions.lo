@@ -1,0 +1,21 @@
+TO SQUARE :length
+    FORWARD :length
+    RIGHT 90
+    FORWARD :length
+    RIGHT 90
+    FORWARD :length
+    RIGHT 90
+    FORWARD :length
+    RIGHT 90
+END
+
+TO BODY :length :x :y
+    SETXY :x :y
+    SQUARE :length
+
+    LEFT 270
+    SETXY :y :x
+    SQUARE :length
+END
+
+BODY 30 30 10
