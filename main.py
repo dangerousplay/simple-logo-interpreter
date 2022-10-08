@@ -229,14 +229,14 @@ class LogoProgram(logoListener):
 
 
 def parse_file(path):
-  lexer = logoLexer(FileStream(path))
-  stream = CommonTokenStream(lexer)
-  parser = logoParser(stream)
-  program = LogoProgram()
+    lexer = logoLexer(FileStream(path))
+    stream = CommonTokenStream(lexer)
+    parser = logoParser(stream)
+    program = LogoProgram()
 
-  parser.addParseListener(program)
-  parser.file_()
+    parser.addParseListener(program)
+    parser.file_()
 
 
 if __name__ == "__main__":
-  parse_file('./examples/commands.lo')
+    parse_file('./examples/commands.lo')
